@@ -1,0 +1,2196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Maintenance Intelligente 4.0</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: #2c3e50;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav li {
+            margin: 0;
+        }
+
+        nav a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background: #34495e;
+        }
+
+        section {
+            padding: 60px 40px;
+            border-bottom: 1px solid #eee;
+        }
+
+        section:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        h3 {
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        h4 {
+            color: #555;
+            margin: 20px 0 10px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .highlight {
+            background: #e3f2fd;
+            padding: 20px;
+            border-left: 4px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            padding: 20px;
+            margin: 20px 0;
+            background: white;
+            border-left: 4px solid #3498db;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .interactive-demo {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        input, select {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+            
+            section {
+                padding: 30px 20px;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .correct {
+            background: #d4edda !important;
+            border-left: 4px solid #28a745;
+        }
+
+        .incorrect {
+            background: #f8d7da !important;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Maintenance Intelligente et Stratégies Industrie 4.0</h1>
+            
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#section1">Généralités</a></li>
+                <li><a href="#section2">Maintenance 4.0</a></li>
+                <li><a href="#section3">Lean Maintenance</a></li>
+                <li><a href="#section4">Prédictive</a></li>
+                <li><a href="#section5">PHM</a></li>
+                <li><a href="#section6">ISO 50001</a></li>
+                <li><a href="#section7">Perspectives</a></li>
+                <li><a href="#section8">Annexes</a></li>
+            </ul>
+        </nav>
+
+        <!-- SECTION 1 -->
+        <section id="section1">
+            <h2>Section 1 : Généralités sur la Maintenance Industrielle</h2>
+            
+            <div class="highlight">
+                <h3>Définition</h3>
+                <p>La maintenance industrielle désigne l'ensemble des actions techniques, administratives et de gestion permettant de maintenir ou rétablir un bien dans un état spécifié afin qu'il puisse accomplir une fonction requise.</p>
+            </div>
+
+            <h3>Évolution Historique</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Avant 1950 : Maintenance Corrective</h4>
+                    <p>Intervention uniquement après la panne. Approche réactive et coûteuse.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>1950-1980 : Maintenance Préventive</h4>
+                    <p>Planification d'interventions systématiques basées sur le temps ou l'usage.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>1980-2000 : Maintenance Conditionnelle</h4>
+                    <p>Surveillance de l'état réel des équipements par mesures et analyses.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Depuis 2000 : Maintenance Prédictive & Intelligente</h4>
+                    <p>Utilisation de l'IA, Big Data et IoT pour anticiper les défaillances.</p>
+                </div>
+            </div>
+
+            <h3>Types de Maintenance</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>Maintenance Corrective</h4>
+                    <p><strong>Définition :</strong> Intervention après défaillance</p>
+                    <p><strong>Avantages :</strong> Pas de planification nécessaire</p>
+                    <p><strong>Inconvénients :</strong> Coûts élevés, arrêts non planifiés</p>
+                    <span class="badge">Réactive</span>
+                </div>
+                <div class="card">
+                    <h4>Maintenance Préventive</h4>
+                    <p><strong>Définition :</strong> Actions planifiées selon calendrier</p>
+                    <p><strong>Avantages :</strong> Réduction des pannes</p>
+                    <p><strong>Inconvénients :</strong> Risque de sur-maintenance</p>
+                    <span class="badge">Systématique</span>
+                </div>
+                <div class="card">
+                    <h4>Maintenance Conditionnelle</h4>
+                    <p><strong>Définition :</strong> Basée sur l'état réel</p>
+                    <p><strong>Avantages :</strong> Optimisation des interventions</p>
+                    <p><strong>Inconvénients :</strong> Nécessite des capteurs</p>
+                    <span class="badge">État</span>
+                </div>
+                <div class="card">
+                    <h4>Maintenance Prédictive</h4>
+                    <p><strong>Définition :</strong> Anticipation via IA et données</p>
+                    <p><strong>Avantages :</strong> Optimisation maximale</p>
+                    <p><strong>Inconvénients :</strong> Investissement technologique</p>
+                    <span class="badge">Intelligente</span>
+                </div>
+            </div>
+
+            <h3>Répartition des Coûts de Maintenance</h3>
+            <div class="chart-container">
+                <canvas id="costChart"></canvas>
+            </div>
+
+            <h3>Normes et Standards</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Norme</th>
+                        <th>Description</th>
+                        <th>Domaine</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ISO 55000</strong></td>
+                        <td>Gestion d'actifs - Vue d'ensemble, principes et terminologie</td>
+                        <td>Management</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ISO 55001</strong></td>
+                        <td>Systèmes de management des actifs - Exigences</td>
+                        <td>Certification</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ISO 55002</strong></td>
+                        <td>Lignes directrices pour l'application</td>
+                        <td>Application</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NF X 60-000</strong></td>
+                        <td>Terminologie de la maintenance (AFNOR)</td>
+                        <td>Terminologie</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NF EN 13306</strong></td>
+                        <td>Terminologie européenne de la maintenance</td>
+                        <td>Standards EU</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section id="section2">
+            <h2>Section 2 : Maintenance 4.0 et GMAO 4.0</h2>
+            
+            <div class="highlight">
+                <h3>Qu'est-ce que la Maintenance 4.0 ?</h3>
+                <p>La Maintenance 4.0 représente l'évolution de la maintenance vers une approche connectée, intelligente et prédictive, intégrant les technologies de l'Industrie 4.0 : IoT, Big Data, Intelligence Artificielle, Cloud Computing et Réalité Augmentée.</p>
+            </div>
+
+            <h3>Technologies Clés</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>Internet des Objets (IoT)</h4>
+                    <p>Capteurs connectés pour surveillance en temps réel des équipements</p>
+                    <ul>
+                        <li>Capteurs de vibration</li>
+                        <li>Capteurs thermiques</li>
+                        <li>Capteurs de pression</li>
+                        <li>Capteurs acoustiques</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Big Data & Analytics</h4>
+                    <p>Traitement massif de données pour insights</p>
+                    <ul>
+                        <li>Historique de pannes</li>
+                        <li>Données de production</li>
+                        <li>Conditions environnementales</li>
+                        <li>Patterns de défaillance</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Intelligence Artificielle</h4>
+                    <p>Algorithmes ML pour prédiction et optimisation</p>
+                    <ul>
+                        <li>Machine Learning</li>
+                        <li>Deep Learning</li>
+                        <li>Réseaux de neurones</li>
+                        <li>Algorithmes prédictifs</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Cloud Computing</h4>
+                    <p>Stockage et traitement distribué</p>
+                    <ul>
+                        <li>Accessibilité mondiale</li>
+                        <li>Scalabilité</li>
+                        <li>Collaboration temps réel</li>
+                        <li>Maintenance à distance</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Comparaison Maintenance Traditionnelle vs 4.0</h3>
+            <div class="chart-container">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+
+            <h3>GMAO 4.0 : Principales Solutions</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Solution</th>
+                        <th>Éditeur</th>
+                        <th>Points Forts</th>
+                        <th>Secteurs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>SAP EAM</strong></td>
+                        <td>SAP</td>
+                        <td>Intégration ERP, Analytics avancés</td>
+                        <td>Grande industrie</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fiix</strong></td>
+                        <td>Rockwell Automation</td>
+                        <td>Cloud-native, IA intégrée</td>
+                        <td>Manufacturing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>UpKeep</strong></td>
+                        <td>UpKeep</td>
+                        <td>Mobile-first, simplicité</td>
+                        <td>PME/PMI</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IBM Maximo</strong></td>
+                        <td>IBM</td>
+                        <td>IA Watson, IoT avancé</td>
+                        <td>Multi-secteurs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Prometheus</strong></td>
+                        <td>Siveco</td>
+                        <td>Personnalisable, français</td>
+                        <td>Industrie lourde</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Étude de Cas : Usine Connectée Siemens</h3>
+            <div class="card">
+                <h4>Siemens Amberg Electronics Plant (Allemagne)</h4>
+                <p><strong>Contexte :</strong> Usine de production d'automates programmables</p>
+                <p><strong>Technologies déployées :</strong></p>
+                <ul>
+                    <li>1,000+ capteurs IoT connectés</li>
+                    <li>Système MES intégré avec GMAO</li>
+                    <li>Maintenance prédictive basée IA</li>
+                    <li>Jumeaux numériques des équipements</li>
+                </ul>
+                <p><strong>Résultats :</strong></p>
+                <ul>
+                    <li>Taux de qualité : 99.9988%</li>
+                    <li>Réduction temps d'arrêt : 45%</li>
+                    <li>Économies maintenance : 30%</li>
+                    <li>Productivité : +8% annuel</li>
+                </ul>
+            </div>
+
+            <h3>ROI de la Maintenance 4.0</h3>
+            <div class="chart-container">
+                <canvas id="roiChart"></canvas>
+            </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section id="section3">
+            <h2>Section 3 : Lean Maintenance</h2>
+            
+            <div class="highlight">
+                <h3>Philosophie Lean en Maintenance</h3>
+                <p>Le Lean Maintenance vise à éliminer les gaspillages (Muda) dans les processus de maintenance tout en maximisant la valeur. Il intègre plusieurs méthodologies complémentaires pour optimiser la performance des équipements.</p>
+            </div>
+
+            <h3>Les 8 Gaspillages (MUDA) en Maintenance</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>1. Surproduction</h4>
+                    <p>Sur-maintenance, pièces en excès</p>
+                </div>
+                <div class="card">
+                    <h4>2. Attentes</h4>
+                    <p>Temps d'attente pièces/techniciens</p>
+                </div>
+                <div class="card">
+                    <h4>3. Transport</h4>
+                    <p>Déplacements inutiles</p>
+                </div>
+                <div class="card">
+                    <h4>4. Sur-traitement</h4>
+                    <p>Opérations non nécessaires</p>
+                </div>
+                <div class="card">
+                    <h4>5. Stock</h4>
+                    <p>Pièces détachées excédentaires</p>
+                </div>
+                <div class="card">
+                    <h4>6. Mouvement</h4>
+                    <p>Gestes superflus</p>
+                </div>
+                <div class="card">
+                    <h4>7. Défauts</h4>
+                    <p>Erreurs d'intervention</p>
+                </div>
+                <div class="card">
+                    <h4>8. Sous-utilisation</h4>
+                    <p>Compétences non exploitées</p>
+                </div>
+            </div>
+
+            <h3>TPM (Total Productive Maintenance)</h3>
+            <div class="card">
+                <h4>Les 8 Piliers du TPM</h4>
+                <ol>
+                    <li><strong>Maintenance Autonome :</strong> Opérateurs responsabilisés</li>
+                    <li><strong>Maintenance Planifiée :</strong> Prévention systématique</li>
+                    <li><strong>Maintenance Qualité :</strong> Zéro défaut</li>
+                    <li><strong>Amélioration Continue :</strong> Kaizen</li>
+                    <li><strong>Gestion Anticipée :</strong> Conception fiable</li>
+                    <li><strong>Formation :</strong> Montée en compétences</li>
+                    <li><strong>Sécurité/Environnement :</strong> Zéro accident</li>
+                    <li><strong>Administration TPM :</strong> Soutien fonctions support</li>
+                </ol>
+            </div>
+
+            <h3>Indicateur OEE (Overall Equipment Effectiveness)</h3>
+            <div class="interactive-demo">
+                <h4>Calculateur OEE Interactif</h4>
+                <label>Disponibilité (%) : <input type="number" id="dispo" value="90" min="0" max="100"></label><br>
+                <label>Performance (%) : <input type="number" id="perf" value="85" min="0" max="100"></label><br>
+                <label>Qualité (%) : <input type="number" id="qual" value="95" min="0" max="100"></label><br>
+                <button onclick="calculateOEE()">Calculer OEE</button>
+                <div id="oeeResult" style="margin-top: 20px; font-size: 1.5em; color: #2c3e50;"></div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="oeeChart"></canvas>
+            </div>
+
+            <h3>Méthode 5S en Maintenance</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>S</th>
+                        <th>Japonais</th>
+                        <th>Français</th>
+                        <th>Application Maintenance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Seiri</td>
+                        <td>Débarrasser</td>
+                        <td>Éliminer outils/pièces inutiles</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Seiton</td>
+                        <td>Ranger</td>
+                        <td>Organisation atelier, shadow board</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Seiso</td>
+                        <td>Nettoyer</td>
+                        <td>Nettoyage = inspection</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Seiketsu</td>
+                        <td>Standardiser</td>
+                        <td>Procédures visuelles standardisées</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Shitsuke</td>
+                        <td>Respecter</td>
+                        <td>Discipline et amélioration continue</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>RCM (Reliability Centered Maintenance)</h3>
+            <div class="card">
+                <h4>Processus RCM en 7 Questions</h4>
+                <ol>
+                    <li>Quelles sont les fonctions de l'équipement ?</li>
+                    <li>Comment peut-il défaillir ?</li>
+                    <li>Quelles sont les causes de défaillance ?</li>
+                    <li>Quels sont les effets de chaque défaillance ?</li>
+                    <li>Quelles sont les conséquences ?</li>
+                    <li>Comment prévenir la défaillance ?</li>
+                    <li>Que faire si la prévention est impossible ?</li>
+                </ol>
+            </div>
+
+            <h3>Lean Six Sigma en Maintenance</h3>
+            <div class="highlight">
+                <h4>Méthodologie DMAIC</h4>
+                <ul>
+                    <li><strong>Define :</strong> Définir le problème (ex: pannes récurrentes)</li>
+                    <li><strong>Measure :</strong> Mesurer MTBF, MTTR, coûts</li>
+                    <li><strong>Analyze :</strong> Analyser causes racines (Ishikawa, 5 Pourquoi)</li>
+                    <li><strong>Improve :</strong> Améliorer processus maintenance</li>
+                    <li><strong>Control :</strong> Contrôler et pérenniser gains</li>
+                </ul>
+            </div>
+
+            <h3>Exemple d'Optimisation : Réduction MTTR</h3>
+            <div class="chart-container">
+                <canvas id="mttrChart"></canvas>
+            </div>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section id="section4">
+            <h2>Section 4 : Maintenance Prédictive</h2>
+            
+            <div class="highlight">
+                <h3>Définition</h3>
+                <p>La maintenance prédictive utilise des données de surveillance continue et des algorithmes d'apprentissage automatique pour prédire les défaillances avant qu'elles ne surviennent, permettant une intervention au moment optimal.</p>
+            </div>
+
+            <h3>Technologies de Surveillance</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>Analyse Vibratoire</h4>
+                    <p><strong>Application :</strong> Machines tournantes</p>
+                    <p><strong>Détecte :</strong> Déséquilibre, désalignement, roulements défectueux</p>
+                    <p><strong>Outils :</strong> Accéléromètres, FFT</p>
+                </div>
+                <div class="card">
+                    <h4>Thermographie Infrarouge</h4>
+                    <p><strong>Application :</strong> Équipements électriques/mécaniques</p>
+                    <p><strong>Détecte :</strong> Points chauds, défauts isolation</p>
+                    <p><strong>Outils :</strong> Caméras thermiques</p>
+                </div>
+                <div class="card">
+                    <h4>Analyse Acoustique</h4>
+                    <p><strong>Application :</strong> Fuites, roulements</p>
+                    <p><strong>Détecte :</strong> Ultrasons, bruits anormaux</p>
+                    <p><strong>Outils :</strong> Microphones ultrasoniques</p>
+                </div>
+                <div class="card">
+                    <h4>Analyse d'Huile</h4>
+                    <p><strong>Application :</strong> Systèmes lubrifiés</p>
+                    <p><strong>Détecte :</strong> Contamination, dégradation</p>
+                    <p><strong>Outils :</strong> Spectrométrie, viscosimétrie</p>
+                </div>
+            </div>
+
+            <h3>Simulation : Analyse Vibratoire FFT</h3>
+            <div class="chart-container">
+                <canvas id="vibrationChart"></canvas>
+            </div>
+
+            <h3>Architecture d'un Système Prédictif</h3>
+            <div class="card">
+                <h4>Pipeline de Données</h4>
+                <ol>
+                    <li><strong>Acquisition :</strong> Capteurs IoT collectent données temps réel</li>
+                    <li><strong>Transmission :</strong> Protocoles industriels (MQTT, OPC-UA)</li>
+                    <li><strong>Stockage :</strong> Data Lake / Time Series DB</li>
+                    <li><strong>Traitement :</strong> Feature Engineering, nettoyage</li>
+                    <li><strong>Modélisation :</strong> Entraînement modèles ML/DL</li>
+                    <li><strong>Prédiction :</strong> Scoring en temps réel</li>
+                    <li><strong>Action :</strong> Alertes, ordres de travail</li>
+                </ol>
+            </div>
+
+            <h3>Algorithmes Machine Learning Utilisés</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Algorithme</th>
+                        <th>Type</th>
+                        <th>Usage Maintenance</th>
+                        <th>Avantages</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Random Forest</strong></td>
+                        <td>Supervisé</td>
+                        <td>Classification pannes</td>
+                        <td>Robuste, interprétable</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LSTM</strong></td>
+                        <td>Deep Learning</td>
+                        <td>Séries temporelles</td>
+                        <td>Capture dépendances long terme</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SVM</strong></td>
+                        <td>Supervisé</td>
+                        <td>Détection anomalies</td>
+                        <td>Efficace haute dimension</td>
+                    </tr>
+                    <tr>
+                        <td><strong>K-Means</strong></td>
+                        <td>Non supervisé</td>
+                        <td>Clustering états</td>
+                        <td>Simple, rapide</td>
+                    </tr>
+                    <tr>
+                        <td><strong>XGBoost</strong></td>
+                        <td>Supervisé</td>
+                        <td>Prédiction RUL</td>
+                        <td>Haute performance</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Simulation Python : Prédiction de Défaillance</h3>
+            <div class="interactive-demo">
+                <h4>Simulateur de Dégradation d'Équipement</h4>
+                <label>Cycles de fonctionnement : <input type="number" id="cycles" value="1000" min="100" max="5000"></label><br>
+                <label>Température moyenne (°C) : <input type="number" id="temp" value="75" min="20" max="150"></label><br>
+                <label>Vibration (mm/s) : <input type="number" id="vib" value="4.5" min="0" max="20" step="0.1"></label><br>
+                <button onclick="predictFailure()">Prédire Défaillance</button>
+                <div id="predictionResult" style="margin-top: 20px;"></div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="degradationChart"></canvas>
+            </div>
+
+            <h3>Indicateurs de Performance</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>Précision Modèle</h4>
+                    <p>Taux de bonnes prédictions</p>
+                    <h3 style="color: #27ae60;">92.5%</h3>
+                </div>
+                <div class="card">
+                    <h4>Anticipation</h4>
+                    <p>Temps d'avance moyen</p>
+                    <h3 style="color: #3498db;">7-14 jours</h3>
+                </div>
+                <div class="card">
+                    <h4>Faux Positifs</h4>
+                    <p>Alertes non justifiées</p>
+                    <h3 style="color: #e67e22;">< 5%</h3>
+                </div>
+                <div class="card">
+                    <h4>ROI</h4>
+                    <p>Retour sur investissement</p>
+                    <h3 style="color: #27ae60;">300-500%</h3>
+                </div>
+            </div>
+
+            <h3>Exemple de Code Python</h3>
+            <div class="card" style="background: #f8f9fa;">
+                <pre style="overflow-x: auto;"><code># Prédiction de défaillance avec Random Forest
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+# Chargement données capteurs
+data = pd.read_csv('sensor_data.csv')
+X = data[['temperature', 'vibration', 'pressure', 'rpm']]
+y = data['failure']
+
+# Division entraînement/test
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Entraînement modèle
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Prédiction
+predictions = model.predict(X_test)
+accuracy = model.score(X_test, y_test)
+print(f'Précision: {accuracy:.2%}')
+
+# Importance des features
+feature_importance = pd.DataFrame({
+    'feature': X.columns,
+    'importance': model.feature_importances_
+}).sort_values('importance', ascending=False)</code></pre>
+            </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section id="section5">
+            <h2>Section 5 : Pronostic et PHM (Prognostics and Health Management)</h2>
+            
+            <div class="highlight">
+                <h3>Qu'est-ce que le PHM ?</h3>
+                <p>Le PHM est une approche intégrée qui combine surveillance, diagnostic et pronostic pour estimer la durée de vie résiduelle (RUL - Remaining Useful Life) des équipements et optimiser les décisions de maintenance.</p>
+            </div>
+
+            <h3>Architecture PHM</h3>
+            <div class="card">
+                <h4>Composantes du Système PHM</h4>
+                <ol>
+                    <li><strong>Data Acquisition :</strong> Collecte multi-capteurs</li>
+                    <li><strong>Signal Processing :</strong> Extraction de caractéristiques</li>
+                    <li><strong>Condition Monitoring :</strong> Évaluation état actuel</li>
+                    <li><strong>Diagnostics :</strong> Identification défauts</li>
+                    <li><strong>Prognostics :</strong> Prédiction RUL</li>
+                    <li><strong>Decision Support :</strong> Recommandations maintenance</li>
+                </ol>
+            </div>
+
+            <h3>Méthodes de Pronostic</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>Approche Basée Physique</h4>
+                    <p><strong>Principe :</strong> Modèles mathématiques de dégradation</p>
+                    <p><strong>Avantages :</strong> Précis, explicable</p>
+                    <p><strong>Inconvénients :</strong> Complexe, spécifique</p>
+                    <p><strong>Exemple :</strong> Loi de Paris (fissuration)</p>
+                </div>
+                <div class="card">
+                    <h4>Approche Data-Driven</h4>
+                    <p><strong>Principe :</strong> Apprentissage sur historique</p>
+                    <p><strong>Avantages :</strong> Flexible, pas de modèle physique</p>
+                    <p><strong>Inconvénients :</strong> Nécessite beaucoup de données</p>
+                    <p><strong>Exemple :</strong> LSTM, CNN</p>
+                </div>
+                <div class="card">
+                    <h4>Approche Hybride</h4>
+                    <p><strong>Principe :</strong> Combine physique et données</p>
+                    <p><strong>Avantages :</strong> Meilleur des deux mondes</p>
+                    <p><strong>Inconvénients :</strong> Plus complexe</p>
+                    <p><strong>Exemple :</strong> Filtre de Kalman + ML</p>
+                </div>
+            </div>
+
+            <h3>Calcul du RUL (Remaining Useful Life)</h3>
+            <div class="interactive-demo">
+                <h4>Simulateur RUL</h4>
+                <label>État actuel (%) : <input type="range" id="healthState" min="0" max="100" value="70"></label>
+                <span id="healthValue">70%</span><br>
+                <label>Taux de dégradation : <input type="range" id="degradRate" min="1" max="10" value="5"></label>
+                <span id="degradValue">5</span><br>
+                <button onclick="calculateRUL()">Calculer RUL</button>
+                <div id="rulResult" style="margin-top: 20px; font-size: 1.3em;"></div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="rulChart"></canvas>
+            </div>
+
+            <h3>Applications Sectorielles</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Secteur</th>
+                        <th>Équipements</th>
+                        <th>Techniques PHM</th>
+                        <th>Bénéfices</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Aéronautique</strong></td>
+                        <td>Moteurs, trains d'atterrissage</td>
+                        <td>Analyse vibratoire, thermique</td>
+                        <td>Sécurité ++, disponibilité</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Énergie</strong></td>
+                        <td>Turbines, transformateurs</td>
+                        <td>Pronostic RUL, monitoring continu</td>
+                        <td>Réduction arrêts imprévus</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Automobile</strong></td>
+                        <td>Batteries, freins, transmission</td>
+                        <td>Modèles dégradation électrochimique</td>
+                        <td>Garanties optimisées</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ferroviaire</strong></td>
+                        <td>Roues, essieux, bogies</td>
+                        <td>Détection fissures, usure</td>
+                        <td>Sécurité, planification</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Manufacturing</strong></td>
+                        <td>Machines-outils, robots</td>
+                        <td>Analyse multi-capteurs</td>
+                        <td>OEE amélioré</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Cas d'Usage : Batteries Véhicules Électriques</h3>
+            <div class="card">
+                <h4>Pronostic SOH (State of Health) Batterie</h4>
+                <p><strong>Paramètres surveillés :</strong></p>
+                <ul>
+                    <li>Tension, courant, température</li>
+                    <li>Nombre de cycles charge/décharge</li>
+                    <li>Profondeur de décharge (DoD)</li>
+                    <li>Taux de charge (C-rate)</li>
+                </ul>
+                <p><strong>Modèle de dégradation :</strong></p>
+                <ul>
+                    <li>Formation SEI (Solid Electrolyte Interface)</li>
+                    <li>Perte de lithium actif</li>
+                    <li>Résistance interne croissante</li>
+                </ul>
+                <p><strong>Résultats :</strong></p>
+                <ul>
+                    <li>Prédiction SOH avec 95% précision</li>
+                    <li>Anticipation fin de vie : 3-6 mois</li>
+                    <li>Optimisation garanties constructeur</li>
+                </ul>
+            </div>
+
+            <h3>Indicateurs de Fiabilité</h3>
+            <div class="chart-container">
+                <canvas id="reliabilityChart"></canvas>
+            </div>
+
+            <h3>Frameworks et Outils PHM</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>MATLAB Predictive Maintenance Toolbox</h4>
+                    <p>Suite complète pour PHM</p>
+                    <span class="badge">Payant</span>
+                </div>
+                <div class="card">
+                    <h4>Python: scikit-survival</h4>
+                    <p>Analyse de survie</p>
+                    <span class="badge">Open Source</span>
+                </div>
+                <div class="card">
+                    <h4>NASA PHM Data Repository</h4>
+                    <p>Datasets de référence</p>
+                    <span class="badge">Gratuit</span>
+                </div>
+                <div class="card">
+                    <h4>PyTorch/TensorFlow</h4>
+                    <p>Deep Learning pour RUL</p>
+                    <span class="badge">Open Source</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6 -->
+        <section id="section6">
+            <h2>Section 6 : Management Énergétique - ISO 50001</h2>
+            
+            <div class="highlight">
+                <h3>ISO 50001 : Système de Management de l'Énergie (SMÉ)</h3>
+                <p>La norme ISO 50001 spécifie les exigences pour établir, mettre en œuvre, maintenir et améliorer un système de management de l'énergie permettant aux organisations d'améliorer en continu leur performance énergétique.</p>
+            </div>
+
+            <h3>Structure ISO 50001:2018</h3>
+            <div class="card">
+                <h4>Approche PDCA (Plan-Do-Check-Act)</h4>
+                <ol>
+                    <li><strong>Plan (Planifier) :</strong> Politique, objectifs, revue énergétique</li>
+                    <li><strong>Do (Faire) :</strong> Mise en œuvre plans d'action</li>
+                    <li><strong>Check (Vérifier) :</strong> Surveillance, mesure, audit</li>
+                    <li><strong>Act (Agir) :</strong> Amélioration continue</li>
+                </ol>
+            </div>
+
+            <h3>Revue Énergétique</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Étape</th>
+                        <th>Description</th>
+                        <th>Outils</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Collecte données</strong></td>
+                        <td>Consommations énergétiques historiques</td>
+                        <td>Compteurs, factures, SCADA</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Analyse usages</strong></td>
+                        <td>Identification consommations</td>
+                        <td>Diagramme Pareto, Sankey</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Identification USE</strong></td>
+                        <td>Usages Énergétiques Significatifs</td>
+                        <td>Matrice criticité</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Opportunités</strong></td>
+                        <td>Potentiels d'amélioration</td>
+                        <td>Benchmarking, audits</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5. Indicateurs</strong></td>
+                        <td>IPÉ (Indicateurs Performance Énergétique)</td>
+                        <td>Tableaux de bord</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Consommation Énergétique Industrielle</h3>
+            <div class="chart-container">
+                <canvas id="energyChart"></canvas>
+            </div>
+
+            <h3>Indicateurs de Performance Énergétique (IPÉ)</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>kWh / unité produite</h4>
+                    <p>Efficacité production</p>
+                    <h3 style="color: #27ae60;">2.3 kWh/pièce</h3>
+                    <span class="badge">-15% vs N-1</span>
+                </div>
+                <div class="card">
+                    <h4>kWh / m² / an</h4>
+                    <p>Performance bâtiment</p>
+                    <h3 style="color: #3498db;">180 kWh/m²</h3>
+                    <span class="badge">Cible: 150</span>
+                </div>
+                <div class="card">
+                    <h4>Ratio utilitaires</h4>
+                    <p>Part énergie auxiliaire</p>
+                    <h3 style="color: #e67e22;">18%</h3>
+                    <span class="badge">Compression</span>
+                </div>
+                <div class="card">
+                    <h4>€/MWh</h4>
+                    <p>Coût énergétique</p>
+                    <h3 style="color: #9b59b6;">85 €</h3>
+                    <span class="badge">Mix énergétique</span>
+                </div>
+            </div>
+
+            <h3>Lien Maintenance - Énergie</h3>
+            <div class="highlight">
+                <h4>Impact de la Maintenance sur la Performance Énergétique</h4>
+                <ul>
+                    <li><strong>Moteurs électriques :</strong> Alignement correct = -5% consommation</li>
+                    <li><strong>Compresseurs :</strong> Détection fuites = -20 à 30% pertes</li>
+                    <li><strong>Éclairage :</strong> Nettoyage luminaires = +15% efficacité</li>
+                    <li><strong>Systèmes CVC :</strong> Maintenance filtres = -10% énergie</li>
+                    <li><strong>Isolation thermique :</strong> Réparation = -15% pertes thermiques</li>
+                </ul>
+            </div>
+
+            <h3>Plans d'Action Énergétique</h3>
+            <div class="card">
+                <h4>Exemple : Optimisation Réseau Air Comprimé</h4>
+                <p><strong>Situation initiale :</strong></p>
+                <ul>
+                    <li>Consommation : 450 MWh/an</li>
+                    <li>Fuites estimées : 25%</li>
+                    <li>Pression réseau : 7 bars</li>
+                </ul>
+                <p><strong>Actions :</strong></p>
+                <ol>
+                    <li>Campagne détection fuites (ultrasons)</li>
+                    <li>Réparation fuites identifiées</li>
+                    <li>Réduction pression à 6 bars</li>
+                    <li>Installation variateurs moteurs</li>
+                    <li>Sensibilisation opérateurs</li>
+                </ol>
+                <p><strong>Résultats :</strong></p>
+                <ul>
+                    <li>Réduction consommation : 30% (-135 MWh)</li>
+                    <li>Économies : 13,500 €/an</li>
+                    <li>CO2 évité : 27 tonnes/an</li>
+                    <li>ROI : 18 mois</li>
+                </ul>
+            </div>
+
+            <h3>Simulation: Analyse Énergétique</h3>
+            <div class="interactive-demo">
+                <h4>Calculateur d'Économies Énergétiques</h4>
+                <label>Consommation actuelle (MWh/an) : <input type="number" id="currentEnergy" value="1000" min="100"></label><br>
+                <label>Coût énergétique (€/MWh) : <input type="number" id="energyCost" value="100" min="50"></label><br>
+                <label>Potentiel d'économie (%) : <input type="range" id="savingPct" min="5" max="40" value="20"></label>
+                <span id="savingValue">20%</span><br>
+                <button onclick="calculateEnergySavings()">Calculer Économies</button>
+                <div id="savingsResult" style="margin-top: 20px;"></div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="savingsChart"></canvas>
+            </div>
+
+            <h3>Certification ISO 50001</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>Étape 1: Gap Analysis</h4>
+                    <p>Évaluation écarts vs exigences</p>
+                </div>
+                <div class="card">
+                    <h4>Étape 2: Mise en œuvre SMÉ</h4>
+                    <p>Déploiement processus et procédures</p>
+                </div>
+                <div class="card">
+                    <h4>Étape 3: Audit interne</h4>
+                    <p>Vérification conformité</p>
+                </div>
+                <div class="card">
+                    <h4>Étape 4: Audit certification</h4>
+                    <p>Organisme accrédité</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7 -->
+        <section id="section7">
+            <h2>Section 7 : Conclusions et Perspectives Futures</h2>
+            
+            <div class="highlight">
+                <h3>Synthèse des Apprentissages</h3>
+                <p>Ce portfolio a permis d'explorer l'évolution de la maintenance industrielle, depuis les approches traditionnelles correctives jusqu'aux stratégies intelligentes et prédictives de l'Industrie 4.0. Nous avons vu comment l'intégration des technologies numériques transforme radicalement la manière dont les organisations gèrent leurs actifs.</p>
+            </div>
+
+            <h3>Points Clés Retenus</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>Évolution Maintenance</h4>
+                    <p>Passage d'une approche réactive à une approche prédictive et prescriptive</p>
+                </div>
+                <div class="card">
+                    <h4>Data-Driven</h4>
+                    <p>Les données sont le nouveau pétrole de la maintenance</p>
+                </div>
+                <div class="card">
+                    <h4>IA & ML</h4>
+                    <p>L'intelligence artificielle révolutionne le pronostic</p>
+                </div>
+                <div class="card">
+                    <h4>Durabilité</h4>
+                    <p>Maintenance et performance énergétique sont indissociables</p>
+                </div>
+            </div>
+
+            <h3>Tendances Émergentes</h3>
+            
+            <h4>1. Digital Twin (Jumeau Numérique)</h4>
+            <div class="card">
+                <p><strong>Définition :</strong> Réplique virtuelle d'un actif physique, synchronisée en temps réel</p>
+                <p><strong>Applications :</strong></p>
+                <ul>
+                    <li>Simulation de scénarios de maintenance</li>
+                    <li>Optimisation paramètres opérationnels</li>
+                    <li>Formation personnel en environnement virtuel</li>
+                    <li>Test de modifications avant implémentation</li>
+                </ul>
+                <p><strong>Exemples :</strong> GE Digital (Predix), Siemens (MindSphere), Azure Digital Twins</p>
+            </div>
+
+            <h4>2. Edge Computing & 5G</h4>
+            <div class="card">
+                <p><strong>Impact sur la maintenance :</strong></p>
+                <ul>
+                    <li>Traitement données en temps réel à la source</li>
+                    <li>Réduction latence pour décisions critiques</li>
+                    <li>Maintenance à distance haute définition</li>
+                    <li>Connectivité massive capteurs IoT</li>
+                </ul>
+            </div>
+
+            <h4>3. Réalité Augmentée (AR) & Virtuelle (VR)</h4>
+            <div class="card">
+                <p><strong>Cas d'usage maintenance :</strong></p>
+                <ul>
+                    <li>Instructions de réparation superposées (AR)</li>
+                    <li>Assistance à distance d'experts</li>
+                    <li>Formation immersive (VR)</li>
+                    <li>Visualisation données capteurs en 3D</li>
+                </ul>
+                <p><strong>Solutions :</strong> Microsoft HoloLens, Magic Leap, Vuzix</p>
+            </div>
+
+            <h4>4. Blockchain pour la Traçabilité</h4>
+            <div class="card">
+                <p><strong>Applications :</strong></p>
+                <ul>
+                    <li>Historique maintenance infalsifiable</li>
+                    <li>Traçabilité pièces détachées</li>
+                    <li>Smart contracts pour ordres de travail</li>
+                    <li>Certification conformité</li>
+                </ul>
+            </div>
+
+            <h4>5. Maintenance Autonome</h4>
+            <div class="card">
+                <p><strong>Vers l'auto-réparation :</strong></p>
+                <ul>
+                    <li>Systèmes auto-diagnostiquants</li>
+                    <li>Robots de maintenance autonomes</li>
+                    <li>Drones d'inspection</li>
+                    <li>Impression 3D de pièces sur site</li>
+                </ul>
+            </div>
+
+            <h3>Roadmap Technologique 2025-2035</h3>
+            <div class="chart-container">
+                <canvas id="roadmapChart"></canvas>
+            </div>
+
+            <h3>Défis à Relever</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Défi</th>
+                        <th>Description</th>
+                        <th>Solutions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Compétences</strong></td>
+                        <td>Pénurie experts data science maintenance</td>
+                        <td>Formation continue, partenariats universités</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cybersécurité</strong></td>
+                        <td>Vulnérabilités systèmes connectés</td>
+                        <td>Sécurité by design, audits réguliers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Interopérabilité</strong></td>
+                        <td>Hétérogénéité systèmes et protocoles</td>
+                        <td>Standards ouverts (OPC-UA, MQTT)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ROI incertain</strong></td>
+                        <td>Investissements lourds, gains à LT</td>
+                        <td>Approche par phases, KPIs clairs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Qualité données</strong></td>
+                        <td>Données manquantes, bruitées</td>
+                        <td>Gouvernance données, nettoyage</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Recommandations Stratégiques</h3>
+            <div class="highlight">
+                <h4>Pour les Organisations</h4>
+                <ol>
+                    <li><strong>Commencer petit :</strong> Pilote sur équipement critique</li>
+                    <li><strong>Gouvernance données :</strong> Qualité avant quantité</li>
+                    <li><strong>Change management :</strong> Accompagner les équipes</li>
+                    <li><strong>Partenariats :</strong> Collaborer avec startups et éditeurs</li>
+                    <li><strong>Culture data :</strong> Promouvoir décisions basées données</li>
+                    <li><strong>Mesurer impact :</strong> KPIs clairs et suivis</li>
+                </ol>
+            </div>
+
+            <h3>Vision 2035 : La Maintenance Prescriptive</h3>
+            <div class="card">
+                <h4>Au-delà de la prédiction : La prescription</h4>
+                <p>Les systèmes de maintenance de demain ne se contenteront plus de prédire les pannes, mais prescriront automatiquement les actions optimales :</p>
+                <ul>
+                    <li><strong>IA décisionnelle :</strong> Recommandations contextualisées</li>
+                    <li><strong>Orchestration automatique :</strong> Planification optimale ressources</li>
+                    <li><strong>Boucle fermée :</strong> Ajustements paramètres automatiques</li>
+                    <li><strong>Multi-objectifs :</strong> Production, coût, énergie, qualité</li>
+                </ul>
+            </div>
+
+            <h3>Quiz Final - Testez Vos Connaissances</h3>
+            <div class="quiz-container">
+                <h4>Question 1 : Quelle technologie est au cœur de la Maintenance 4.0 ?</h4>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">A. La maintenance corrective</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">B. L'IoT et le Big Data</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">C. Le 5S uniquement</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">D. La GMAO traditionnelle</div>
+            </div>
+
+            <div class="quiz-container">
+                <h4>Question 2 : Que signifie RUL en PHM ?</h4>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">A. Return Under Load</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">B. Remaining Useful Life</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">C. Reliability Under Limit</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">D. Random Usage Log</div>
+            </div>
+
+            <div class="quiz-container">
+                <h4>Question 3 : L'ISO 50001 concerne :</h4>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">A. La qualité</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">B. Le management énergétique</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">C. La sécurité</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">D. L'environnement</div>
+            </div>
+        </section>
+
+        <!-- SECTION 8 -->
+        <section id="section8">
+            <h2>Section 8 : Annexes</h2>
+            
+            <h3>A. Glossaire Technique</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Terme</th>
+                        <th>Définition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>MTBF</strong></td>
+                        <td>Mean Time Between Failures - Temps moyen entre défaillances</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MTTR</strong></td>
+                        <td>Mean Time To Repair - Temps moyen de réparation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OEE</strong></td>
+                        <td>Overall Equipment Effectiveness - Taux de Rendement Synthétique</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TPM</strong></td>
+                        <td>Total Productive Maintenance - Maintenance Productive Totale</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RCM</strong></td>
+                        <td>Reliability Centered Maintenance - Maintenance Basée sur la Fiabilité</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PHM</strong></td>
+                        <td>Prognostics and Health Management - Pronostic et Gestion de Santé</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RUL</strong></td>
+                        <td>Remaining Useful Life - Durée de Vie Résiduelle</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GMAO</strong></td>
+                        <td>Gestion de Maintenance Assistée par Ordinateur</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CMMS</strong></td>
+                        <td>Computerized Maintenance Management System</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IoT</strong></td>
+                        <td>Internet of Things - Internet des Objets</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FFT</strong></td>
+                        <td>Fast Fourier Transform - Transformée de Fourier Rapide</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SoH</strong></td>
+                        <td>State of Health - État de Santé</td>
+                    </tr>
+                    <tr>
+                        <td><strong>KPI</strong></td>
+                        <td>Key Performance Indicator - Indicateur Clé de Performance</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SCADA</strong></td>
+                        <td>Supervisory Control And Data Acquisition</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ML</strong></td>
+                        <td>Machine Learning - Apprentissage Automatique</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>B. Méthodes et Techniques</h3>
+            
+            <h4>Méthode des 5 Pourquoi</h4>
+            <div class="card">
+                <p><strong>Objectif :</strong> Identifier la cause racine d'un problème</p>
+                <p><strong>Exemple :</strong></p>
+                <ol>
+                    <li><strong>Pourquoi</strong> la machine s'est arrêtée ? → Surcharge moteur</li>
+                    <li><strong>Pourquoi</strong> surcharge ? → Lubrification insuffisante</li>
+                    <li><strong>Pourquoi</strong> lubrification insuffisante ? → Pompe défaillante</li>
+                    <li><strong>Pourquoi</strong> pompe défaillante ? → Pas d'entretien préventif</li>
+                    <li><strong>Pourquoi</strong> pas d'entretien ? → Absence de planning</li>
+                </ol>
+                <p><strong>Cause racine :</strong> Absence de planning de maintenance préventive</p>
+            </div>
+
+            <h4>Diagramme d'Ishikawa (5M)</h4>
+            <div class="card">
+                <p><strong>Catégories d'analyse :</strong></p>
+                <ul>
+                    <li><strong>Matière :</strong> Qualité composants, pièces détachées</li>
+                    <li><strong>Matériel :</strong> État équipements, outils</li>
+                    <li><strong>Méthode :</strong> Procédures, standards</li>
+                    <li><strong>Main d'œuvre :</strong> Compétences, formation</li>
+                    <li><strong>Milieu :</strong> Environnement, conditions travail</li>
+                </ul>
+            </div>
+
+            <h4>AMDEC (Analyse des Modes de Défaillances)</h4>
+            <div class="card">
+                <p><strong>Calcul de criticité :</strong></p>
+                <p>Criticité = Gravité × Occurrence × Détection</p>
+                <p><strong>Échelle :</strong> 1 à 5 pour chaque critère</p>
+                <p><strong>Action :</strong> Priorité si Criticité > 60</p>
+            </div>
+
+            <h3>C. Formules Clés</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Indicateur</th>
+                        <th>Formule</th>
+                        <th>Unité</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Disponibilité</strong></td>
+                        <td>MTBF / (MTBF + MTTR) × 100</td>
+                        <td>%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OEE</strong></td>
+                        <td>Disponibilité × Performance × Qualité</td>
+                        <td>%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Taux de panne</strong></td>
+                        <td>Nombre pannes / Temps fonctionnement</td>
+                        <td>pannes/h</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Coût maintenance</strong></td>
+                        <td>(Coûts directs + indirects) / Valeur actifs</td>
+                        <td>%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RUL</strong></td>
+                        <td>(Seuil défaillance - État actuel) / Vitesse dégradation</td>
+                        <td>heures</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>D. Ressources et Références</h3>
+            
+            <h4>Normes</h4>
+            <ul>
+                <li>ISO 55000:2014 - Asset management</li>
+                <li>ISO 50001:2018 - Energy management systems</li>
+                <li>NF EN 13306:2017 - Maintenance terminology</li>
+                <li>ISO 14224:2016 - Equipment reliability data</li>
+            </ul>
+
+            <h4>Livres Recommandés</h4>
+            <ul>
+                <li>"Reliability-Centered Maintenance" - John Moubray</li>
+                <li>"Predictive Maintenance with Python" - Samir Milojkovic</li>
+                <li>"TPM: Total Productive Maintenance" - Seiichi Nakajima</li>
+                <li>"The Lean Six Sigma Pocket Toolbook" - Michael George</li>
+            </ul>
+
+            <h4>Plateformes en Ligne</h4>
+            <ul>
+                <li><strong>Coursera :</strong> Predictive Maintenance, Industry 4.0</li>
+                <li><strong>edX :</strong> IoT for Manufacturing</li>
+                <li><strong>LinkedIn Learning :</strong> Gestion de projet, Lean</li>
+                <li><strong>Kaggle :</strong> Datasets maintenance prédictive</li>
+            </ul>
+
+            <h4>Logiciels Open Source</h4>
+            <ul>
+                <li><strong>Python :</strong> scikit-learn, TensorFlow, PyTorch</li>
+                <li><strong>R :</strong> survival, reliability packages</li>
+                <li><strong>MATLAB :</strong> Predictive Maintenance Toolbox (licence étudiante)</li>
+            </ul>
+
+            <h3>E. Crédits et Remerciements</h3>
+            <div class="card">
+                <h4>Équipe de Réalisation</h4>
+                <p><strong>Encadrant :</strong> [Mr. Faycel Ben hmida]</p>
+                <p><strong>Étudiants :</strong></p>
+                <ul>
+                    <li>[Harrazi Siwar] 
+                    <li>[Malek Ben hmida] 
+                    <li>[Wechteti Rayen] 
+                    <li>[Itimi Nessrine] 
+                    <li>[Rajhi Nessrine] 
+                    <li>[Dridi Salah] 
+                </ul>
+                <p><strong>Année Académique :</strong> 2025-2026</p>
+                <p><strong>Institution :</strong> [École nationale supérieure d'ingénieurs de Tunis]</p>
+            </div>
+
+            <h3>F. Contacts et Feedback</h3>
+            <div class="card">
+                <p>💌 Pour toute question ou suggestion concernant ce portfolio :</p>
+                <p>📧 Email : [siwarharrazi@gmail.com]</p>
+                <p>🔗 LinkedIn : [https://www.linkedin.com/feed/]</p>
+                <p>📱 GitHub : [https://github.com/siwarharrazi?tab=repositories]</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2024-2025 - Portfolio Maintenance Intelligente 4.0</p>
+            <p>Réalisé dans le cadre du cours de Maintenance Industrielle</p>
+            <p>Tous droits réservés</p>
+        </footer>
+    </div>
+
+    <script>
+        // Chart 1: Répartition des coûts de maintenance
+        const costCtx = document.getElementById('costChart').getContext('2d');
+        new Chart(costCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Corrective', 'Préventive', 'Prédictive', 'Améliorative'],
+                datasets: [{
+                    data: [35, 40, 15, 10],
+                    backgroundColor: ['#e74c3c', '#f39c12', '#3498db', '#2ecc71']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Répartition Typique des Coûts de Maintenance',
+                        font: { size: 16 }
+                    },
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Chart 2: Comparaison Maintenance Traditionnelle vs 4.0
+        const compCtx = document.getElementById('comparisonChart').getContext('2d');
+        new Chart(compCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Réactivité', 'Coûts', 'Disponibilité', 'Prédiction', 'Efficacité', 'Innovation'],
+                datasets: [{
+                    label: 'Traditionnelle',
+                    data: [3, 4, 6, 2, 5, 3],
+                    borderColor: '#95a5a6',
+                    backgroundColor: 'rgba(149, 165, 166, 0.2)'
+                }, {
+                    label: 'Maintenance 4.0',
+                    data: [9, 8, 9, 9, 8, 9],
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: { min: 0, max: 10 }
+                }
+            }
+        });
+
+        // Chart 3: ROI Maintenance 4.0
+        const roiCtx = document.getElementById('roiChart').getContext('2d');
+        new Chart(roiCtx, {
+            type: 'line',
+            data: {
+                labels: ['An 0', 'An 1', 'An 2', 'An 3', 'An 4', 'An 5'],
+                datasets: [{
+                    label: 'Investissement cumulé',
+                    data: [-500, -500, -500, -500, -500, -500],
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    fill: true
+                }, {
+                    label: 'Gains cumulés',
+                    data: [0, 200, 450, 750, 1100, 1500],
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    fill: true
+                }, {
+                    label: 'Net',
+                    data: [-500, -300, -50, 250, 600, 1000],
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    fill: true,
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Retour sur Investissement Maintenance 4.0 (k€)',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: { 
+                        title: { display: true, text: 'Montant (k€)' }
+                    }
+                }
+            }
+        });
+
+        // Chart 4: OEE Components
+        const oeeCtx = document.getElementById('oeeChart').getContext('2d');
+        new Chart(oeeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Classe Mondiale', 'Moyenne Industrie', 'Avant Amélioration', 'Après TPM'],
+                datasets: [{
+                    label: 'Disponibilité (%)',
+                    data: [90, 85, 75, 92],
+                    backgroundColor: '#3498db'
+                }, {
+                    label: 'Performance (%)',
+                    data: [95, 90, 80, 93],
+                    backgroundColor: '#f39c12'
+                }, {
+                    label: 'Qualité (%)',
+                    data: [99, 95, 88, 97],
+                    backgroundColor: '#2ecc71'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Comparaison Composantes OEE',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: { 
+                        min: 0, 
+                        max: 100,
+                        title: { display: true, text: 'Pourcentage (%)' }
+                    }
+                }
+            }
+        });
+
+        // Chart 5: MTTR Reduction
+        const mttrCtx = document.getElementById('mttrChart').getContext('2d');
+        new Chart(mttrCtx, {
+            type: 'line',
+            data: {
+                labels: ['Sem 1', 'Sem 5', 'Sem 10', 'Sem 15', 'Sem 20', 'Sem 25'],
+                datasets: [{
+                    label: 'MTTR (heures)',
+                    data: [8.5, 7.8, 6.5, 5.2, 4.1, 3.5],
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Réduction MTTR avec Lean Maintenance',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: { 
+                        title: { display: true, text: 'MTTR (heures)' },
+                        min: 0
+                    }
+                }
+            }
+        });
+
+        // Chart 6: Vibration Analysis (FFT Simulation)
+        const vibCtx = document.getElementById('vibrationChart').getContext('2d');
+        const frequencies = [];
+        const amplitudes = [];
+        for(let i = 0; i <= 100; i++) {
+            frequencies.push(i * 10);
+            let amp = Math.random() * 2;
+            if(i === 15) amp = 35; // Peak at bearing frequency
+            if(i === 30) amp = 20; // Peak at shaft frequency
+            if(i === 60) amp = 12; // Harmonic
+            amplitudes.push(amp);
+        }
+        
+        new Chart(vibCtx, {
+            type: 'line',
+            data: {
+                labels: frequencies,
+                datasets: [{
+                    label: 'Amplitude (mm/s)',
+                    data: amplitudes,
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.3)',
+                    fill: true,
+                    borderWidth: 2,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Spectre FFT - Analyse Vibratoire (Détection défaut roulement)',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    x: { 
+                        title: { display: true, text: 'Fréquence (Hz)' }
+                    },
+                    y: { 
+                        title: { display: true, text: 'Amplitude (mm/s)' }
+                    }
+                }
+            }
+        });
+
+        // Chart 7: Degradation Curve
+        const degCtx = document.getElementById('degradationChart').getContext('2d');
+        const timePoints = [];
+        const healthPoints = [];
+        for(let t = 0; t <= 100; t++) {
+            timePoints.push(t);
+            healthPoints.push(100 - Math.pow(t/10, 2));
+        }
+        
+        new Chart(degCtx, {
+            type: 'line',
+            data: {
+                labels: timePoints,
+                datasets: [{
+                    label: 'État de santé (%)',
+                    data: healthPoints,
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Seuil critique',
+                    data: Array(101).fill(30),
+                    borderColor: '#f39c12',
+                    borderDash: [5, 5],
+                    borderWidth: 2,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Courbe de Dégradation et Prédiction RUL',
+                        font: { size: 16 }
+                    },
+                    annotation: {
+                        annotations: {
+                            box1: {
+                                type: 'box',
+                                xMin: 80,
+                                xMax: 100,
+                                yMin: 0,
+                                yMax: 30,
+                                backgroundColor: 'rgba(231, 76, 60, 0.1)'
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { 
+                        title: { display: true, text: 'Temps (jours)' }
+                    },
+                    y: { 
+                        title: { display: true, text: 'État de santé (%)' },
+                        min: 0,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Chart 8: RUL Prediction
+        const rulCtx = document.getElementById('rulChart').getContext('2d');
+        new Chart(rulCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Prédiction RUL',
+                    data: [
+                        {x: 0, y: 100}, {x: 20, y: 85}, {x: 40, y: 68},
+                        {x: 60, y: 48}, {x: 80, y: 25}, {x: 100, y: 0}
+                    ],
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.5)',
+                    showLine: true,
+                    tension: 0.4
+                }, {
+                    label: 'Zone optimale intervention',
+                    data: [{x: 70, y: 35}, {x: 90, y: 10}],
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.3)',
+                    showLine: false,
+                    pointRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Modèle de Pronostic RUL',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    x: { 
+                        title: { display: true, text: 'Cycles opérationnels' }
+                    },
+                    y: { 
+                        title: { display: true, text: 'Santé équipement (%)' }
+                    }
+                }
+            }
+        });
+
+        // Chart 9: Reliability (Bathtub Curve)
+        const relCtx = document.getElementById('reliabilityChart').getContext('2d');
+        const time = [];
+        const failureRate = [];
+        for(let t = 0; t <= 100; t++) {
+            time.push(t);
+            let rate;
+            if(t < 10) rate = 8 - t * 0.5; // Early failures
+            else if(t < 70) rate = 3 + Math.random() * 0.5; // Useful life
+            else rate = 3 + (t - 70) * 0.3; // Wear-out
+            failureRate.push(rate);
+        }
+        
+        new Chart(relCtx, {
+            type: 'line',
+            data: {
+                labels: time,
+                datasets: [{
+                    label: 'Taux de défaillance λ(t)',
+                    data: failureRate,
+                    borderColor: '#9b59b6',
+                    backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Courbe en Baignoire - Taux de Défaillance',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    x: { 
+                        title: { display: true, text: 'Temps (années)' }
+                    },
+                    y: { 
+                        title: { display: true, text: 'Taux de défaillance' }
+                    }
+                }
+            }
+        });
+
+        // Chart 10: Energy Consumption by Process
+        const energyCtx = document.getElementById('energyChart').getContext('2d');
+        new Chart(energyCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Production', 'Compression air', 'HVAC', 'Éclairage', 'Auxiliaires'],
+                datasets: [{
+                    data: [45, 20, 18, 10, 7],
+                    backgroundColor: ['#3498db', '#e74c3c', '#f39c12', '#2ecc71', '#9b59b6']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Répartition Consommation Énergétique Industrielle',
+                        font: { size: 16 }
+                    },
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Chart 11: Energy Savings Potential
+        const savingsCtx = document.getElementById('savingsChart').getContext('2d');
+        new Chart(savingsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Moteurs', 'Compression', 'Éclairage', 'HVAC', 'Isolation'],
+                datasets: [{
+                    label: 'Économies potentielles (%)',
+                    data: [15, 30, 40, 25, 20],
+                    backgroundColor: ['#3498db', '#e74c3c', '#f39c12', '#2ecc71', '#9b59b6']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Potentiels d\'Économies Énergétiques par Poste',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: { 
+                        title: { display: true, text: 'Économies (%)' },
+                        min: 0,
+                        max: 50
+                    }
+                }
+            }
+        });
+
+        // Chart 12: Technology Roadmap
+        const roadmapCtx = document.getElementById('roadmapChart').getContext('2d');
+        new Chart(roadmapCtx, {
+            type: 'line',
+            data: {
+                labels: ['2025', '2027', '2029', '2031', '2033', '2035'],
+                datasets: [{
+                    label: 'IoT & Capteurs',
+                    data: [80, 90, 95, 98, 99, 100],
+                    borderColor: '#3498db',
+                    tension: 0.4
+                }, {
+                    label: 'IA Prédictive',
+                    data: [60, 75, 85, 92, 96, 98],
+                    borderColor: '#e74c3c',
+                    tension: 0.4
+                }, {
+                    label: 'Digital Twins',
+                    data: [30, 50, 70, 85, 92, 95],
+                    borderColor: '#2ecc71',
+                    tension: 0.4
+                }, {
+                    label: 'Maintenance Autonome',
+                    data: [10, 25, 45, 65, 80, 90],
+                    borderColor: '#f39c12',
+                    tension: 0.4
+                }, {
+                    label: 'AR/VR',
+                    data: [20, 35, 55, 70, 82, 88],
+                    borderColor: '#9b59b6',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Roadmap d\'Adoption des Technologies (% marché)',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: { 
+                        title: { display: true, text: 'Taux d\'adoption (%)' },
+                        min: 0,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Interactive Functions
+        function calculateOEE() {
+            const dispo = parseFloat(document.getElementById('dispo').value);
+            const perf = parseFloat(document.getElementById('perf').value);
+            const qual = parseFloat(document.getElementById('qual').value);
+            const oee = (dispo * perf * qual) / 10000;
+            
+            let color, message;
+            if(oee >= 85) {
+                color = '#2ecc71';
+                message = 'Excellent (Classe Mondiale)';
+            } else if(oee >= 60) {
+                color = '#f39c12';
+                message = 'Bon (Amélioration possible)';
+            } else {
+                color = '#e74c3c';
+                message = 'Faible (Action requise)';
+            }
+            
+            document.getElementById('oeeResult').innerHTML = 
+                `<strong style="color: ${color}">OEE = ${oee.toFixed(1)}%</strong><br>${message}`;
+        }
+
+        function predictFailure() {
+            const cycles = parseInt(document.getElementById('cycles').value);
+            const temp = parseFloat(document.getElementById('temp').value);
+            const vib = parseFloat(document.getElementById('vib').value);
+            
+            // Simple scoring model
+            let score = 100;
+            score -= (cycles / 50);
+            score -= (temp - 50) * 0.5;
+            score -= vib * 5;
+            
+            let risk, color, recommendation;
+            if(score > 70) {
+                risk = 'FAIBLE';
+                color = '#2ecc71';
+                recommendation = 'Surveillance normale';
+            } else if(score > 40) {
+                risk = 'MOYEN';
+                color = '#f39c12';
+                recommendation = 'Programmer inspection dans 30 jours';
+            } else {
+                risk = 'ÉLEVÉ';
+                color = '#e74c3c';
+                recommendation = 'INTERVENTION URGENTE REQUISE';
+            }
+            
+            document.getElementById('predictionResult').innerHTML = `
+                <div style="padding: 20px; background: ${color}20; border-left: 4px solid ${color}; border-radius: 5px;">
+                    <h4 style="color: ${color}; margin-top: 0;">Risque de Défaillance: ${risk}</h4>
+                    <p><strong>Score de santé:</strong> ${score.toFixed(1)}/100</p>
+                    <p><strong>Recommandation:</strong> ${recommendation}</p>
+                    <p><strong>RUL estimé:</strong> ${Math.max(0, Math.floor(score * 10))} heures</p>
+                </div>
+            `;
+        }
+
+        function calculateRUL() {
+            const health = parseInt(document.getElementById('healthState').value);
+            const degrad = parseInt(document.getElementById('degradRate').value);
+            
+            const rul = Math.floor((health - 20) / degrad);
+            const days = Math.floor(rul / 24);
+            
+            let color = health > 50 ? '#2ecc71' : health > 30 ? '#f39c12' : '#e74c3c';
+            
+            document.getElementById('rulResult').innerHTML = `
+                <div style="padding: 20px; background: ${color}20; border-left: 4px solid ${color}; border-radius: 5px;">
+                    <p><strong>Durée de Vie Résiduelle (RUL):</strong></p>
+                    <h3 style="color: ${color}; margin: 10px 0;">${rul} heures (≈ ${days} jours)</h3>
+                    <p><strong>Recommandation:</strong> ${rul > 336 ? 'Surveillance normale' : rul > 168 ? 'Planifier intervention' : 'Intervention urgente'}</p>
+                </div>
+            `;
+        }
+
+        function calculateEnergySavings() {
+            const current = parseFloat(document.getElementById('currentEnergy').value);
+            const cost = parseFloat(document.getElementById('energyCost').value);
+            const saving = parseFloat(document.getElementById('savingPct').value);
+            
+            const savedEnergy = current * saving / 100;
+            const savedCost = savedEnergy * cost;
+            const savedCO2 = savedEnergy * 0.2; // 0.2 tCO2/MWh
+            
+            document.getElementById('savingsResult').innerHTML = `
+                <div style="padding: 20px; background: #2ecc7120; border-left: 4px solid #2ecc71; border-radius: 5px;">
+                    <h4 style="color: #2ecc71; margin-top: 0;">Économies Projetées</h4>
+                    <p><strong>Énergie économisée:</strong> ${savedEnergy.toFixed(0)} MWh/an</p>
+                    <p><strong>Économies financières:</strong> ${savedCost.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} €/an</p>
+                    <p><strong>CO2 évité:</strong> ${savedCO2.toFixed(1)} tonnes/an</p>
+                    <p><strong>ROI estimé:</strong> ${(150000 / savedCost).toFixed(1)} ans (investissement 150k€)</p>
+                </div>
+            `;
+        }
+
+        function checkAnswer(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+            
+            if(isCorrect) {
+                element.classList.add('correct');
+                element.innerHTML += ' ✓ Correct !';
+            } else {
+                element.classList.add('incorrect');
+                element.innerHTML += ' ✗ Incorrect';
+            }
+        }
+
+        // Update slider values
+        document.getElementById('healthState').addEventListener('input', function() {
+            document.getElementById('healthValue').textContent = this.value + '%';
+        });
+        
+        document.getElementById('degradRate').addEventListener('input', function() {
+            document.getElementById('degradValue').textContent = this.value;
+        });
+        
+        document.getElementById('savingPct').addEventListener('input', function() {
+            document.getElementById('savingValue').textContent = this.value + '%';
+        });
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>
